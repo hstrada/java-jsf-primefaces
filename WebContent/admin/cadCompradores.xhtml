@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cadastro de Compradores</title>
+</h:head>
+<h:body>
+	<ui:composition template="layout.xhtml">
+		<ui:define name="conteudo">
+
+			<p:growl id="growl" showDetail="true" sticky="true" />
+
+			<h:form>
+				<p:panelGrid columns="2">
+					<f:facet name="header">
+						<h2>
+							<p:outputLabel value="Cadastro de Compradores" />
+						</h2>
+					</f:facet>
+					<p:outputLabel value="#{msg.codigol}" />
+					<p:selectOneMenu value="#{compBean.codComprador}">
+						<f:selectItems value="#{livrosBean.listaLivros}" var="livro"
+							itemLabel="#{livro.titulo}" itemValue="#{livro.codigo}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{msg.nome}" />
+					<p:inputText value="#{compBean.comprador.nome}" />
+
+					<p:outputLabel value="#{msg.email}" />
+					<p:inputText value="#{compBean.comprador.email}" />
+
+					<p:outputLabel />
+					<p:commandButton action="#{compBean.incluirComprador}"
+						value="Incluir" update="@form :growl :tabela" process="@form" />
+				</p:panelGrid>
+
+				<p:messages showSummary="true" showDetail="true"></p:messages>
+			</h:form>
+
+			<h:form id="tabela">
+				<p:dataTable value="#{compBean.listaCompradores}" var="comp"
+					styleClass="tabela" headerClass="cabecalho"
+					columnClasses="col1,col2,col3,col4" widgetVar="livrosTable">
+					<p:column>
+						<f:facet name="header">
+							<p:outputLabel value="CODIGO" />
+						</f:facet>
+						<p:outputLabel value="#{comp.codigo}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<p:outputLabel value="NOME" />
+						</f:facet>
+						<p:outputLabel value="#{comp.nome}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<p:outputLabel value="EMAIL" />
+						</f:facet>
+						<p:outputLabel value="#{comp.email}" />
+					</p:column>
+
+					<p:column filterBy="#{comp.livro.titulo}" headerText="Livro"
+						filterMatchMode="exact">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('livrosTable').filter()">
+								<f:selectItem itemLabel="Selecione o Livro" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{livrosBean.listaLivros}" />
+							</p:selectOneMenu>
+						</f:facet>
+						<p:outputLabel value="#{comp.livro.titulo}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
